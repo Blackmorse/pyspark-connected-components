@@ -32,3 +32,22 @@ Returns:
 2. `did_converge` - whether the algorithm succeeded, i.e., whether it converged or reached `max_iteration_count`.
 3. `iter_count` - the number of iterations.
 
+Example:
+
+```python
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col
+from connected_components import connected_components
+
+spark = SparkSession.builder.master("local").appName("ConnectedComponentsExample").getOrCreate()
+
+data = [(1, 2), (2, 3), (3, 4), (5, 6)]
+columns = ["src", "dst"]
+df = spark.createDataFrame(data, columns)
+
+cc, did_converge, iter_count, cached = connected_components(df, 10)
+cached.unpersist()
+
+cc.show()
+```
+
